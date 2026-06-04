@@ -1,6 +1,7 @@
 package com.example.coupangapiserver.product;
 
 import com.example.coupangapiserver.product.domain.Product;
+import com.example.coupangapiserver.product.domain.ProductDocument;
 import com.example.coupangapiserver.product.dto.CreateProductRequestDto;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,29 @@ public class ProductController {
         List<String> suggestions = productService.getSuggestions(query);
         return ResponseEntity.ok(suggestions);
     }
+
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductDocument>> searchProducts(
+            @RequestParam String query,
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "0") double minPrice,
+            @RequestParam(defaultValue = "1000000000") double maxPrice,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int size
+    ){
+        List<ProductDocument> products = productService.searchProducts(
+                query,
+                category,
+                minPrice,
+                maxPrice,
+                page,
+                size
+        );
+        return ResponseEntity.ok(products);
+
+    }
+
 
     @PostMapping()
     public ResponseEntity<Product> createProduct(@RequestBody CreateProductRequestDto createProductRequestDto) {
